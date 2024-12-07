@@ -1,20 +1,18 @@
 <?php
-$url = getenv('JAWSDB_URL');
-if ($url) {
+if (getenv('JAWSDB_URL') !== false) {
+    $url = getenv('JAWSDB_URL');
     $dbparts = parse_url($url);
-
     $hostname = $dbparts['host'];
     $username = $dbparts['user'];
     $password = $dbparts['pass'];
     $database = ltrim($dbparts['path'], '/');
-    $port = $dbparts['port'] ?? 3306; 
 } else {
 
     $hostname = 'localhost';
     $username = 'root';
     $password = '';
     $database = 'arcadia';
-    $port = 3306; 
+    
 }
 
 try {
