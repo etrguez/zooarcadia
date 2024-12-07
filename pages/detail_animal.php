@@ -1,12 +1,7 @@
 <?php
 session_start();
 
-try {
-    $base_de_donnees = new PDO('mysql:host=localhost;port=3306;dbname=arcadia', 'root', '');
-    $base_de_donnees->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die('Erreur de connexion : ' . $e->getMessage());
-}
+require_once '../configuration/config.php';
 
 if (isset($_GET['animal_id'])) {
     $animal_id = $_GET['animal_id'];

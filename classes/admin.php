@@ -1,5 +1,5 @@
 <?php
-
+require_once '../configuration/config.php';
 require_once 'utilisateur.php';
 require_once 'employe.php';
 require_once 'veterinaire.php';

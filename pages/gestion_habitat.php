@@ -1,10 +1,12 @@
 <?php
 session_start();
-
+require_once '../configuration/config.php';
 if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1 && $_SESSION['role'] != 3)) {
     header('Location: connexion_utilisateur.php');
     exit();
 }
+
+
 
 $role_utilisateur = $_SESSION['role'];
 $role_label = $role_utilisateur == 1 ? 'Administrateur' : ($role_utilisateur == 3 ? 'Vétérinaire' : 'Employé');

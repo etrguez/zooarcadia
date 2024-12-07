@@ -1,6 +1,7 @@
 <?php
 
 require '../vendor/autoload.php'; 
+require_once '../configuration/config.php';
 
 use MongoDB\Client;
 

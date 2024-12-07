@@ -1,16 +1,11 @@
 <?php
 session_start();
-
+require_once '../configuration/config.php';
 require '../vendor/autoload.php';
 
 use MongoDB\Client;
 
-try {
-    $bdd = new PDO('mysql:host=localhost;port=3306;dbname=arcadia', 'root', '');
-    $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die('Erreur de connexion : ' . $e->getMessage());
-}
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';

@@ -1,5 +1,5 @@
 <?php
-
+require_once '../configuration/config.php';
 class Image
 {
     private $image_id;

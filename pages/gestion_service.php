@@ -1,10 +1,12 @@
 <?php
 session_start();
-
+require_once '../configuration/config.php';
 if (!isset($_SESSION['role']) || $_SESSION['role'] != 1) {
     header('Location: connexion_utilisateur.php');
     exit();
 }
+
+
 
 $role_utilisateur = $_SESSION['role'];
 

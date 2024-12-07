@@ -1,3 +1,7 @@
+<?php
+require_once '../configuration/config.php';
+?>
+
 <!DOCTYPE html>
 <html lang="FR">
 <head>

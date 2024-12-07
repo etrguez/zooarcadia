@@ -1,5 +1,5 @@
 <?php
-
+require_once '../configuration/config.php';
 require_once 'utilisateur.php';
 
 class Veterinaire extends Utilisateur {

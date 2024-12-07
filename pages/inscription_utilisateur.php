@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once '../configuration/config.php';
 require_once '../classes/admin.php';
 require_once '../classes/employe.php';
 require_once '../classes/veterinaire.php';
@@ -18,13 +19,7 @@ if (isset($_POST['Creer'])) {
         $role_id = ($_POST['role']);
         $label = 'Label par défaut';
 
-        try {
-            $bdd = new PDO('mysql:host=localhost;port=3306;dbname=arcadia', 'root', '');
-            $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $e) {
-            echo 'Erreur de connexion : ' . $e->getMessage();
-            exit();
-        }
+        require_once '../configuration/config.php';
 
         $sql = "INSERT INTO utilisateurs (username, password, nom, prenom, role_id, label) VALUES (:username, :password, :nom, :prenom, :role_id, :label)";
         $stmt = $bdd->prepare($sql);

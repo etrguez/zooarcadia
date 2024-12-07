@@ -1,4 +1,5 @@
 <?php
+require_once '../configuration/config.php';
 class Animal {
     protected $animal_id;
     protected $prenom;

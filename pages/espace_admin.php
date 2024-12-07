@@ -1,4 +1,6 @@
 <?php
+require_once '../configuration/config.php';
+
 session_start();
 if(isset($_SESSION['message_connexion'])){
     echo htmlspecialchars($_SESSION['message_connexion']);
@@ -145,3 +147,4 @@ switch ($role_utilisateur) {
 <script src="script.js"></script>
 </body>
 </html>
+

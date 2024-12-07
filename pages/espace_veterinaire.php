@@ -1,10 +1,14 @@
 <?php
 session_start();
+require_once '../configuration/config.php';
 if(isset($_SESSION['message_connexion'])){
     echo  htmlspecialchars($_SESSION['message_connexion']);
 unset($_SESSION['message_connexion']);
 }
+
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="fr">

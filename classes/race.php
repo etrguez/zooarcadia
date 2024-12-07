@@ -1,5 +1,5 @@
 <?php
-
+require_once '../configuration/config.php';
 class Race extends Animal
 {
     private $race_id;

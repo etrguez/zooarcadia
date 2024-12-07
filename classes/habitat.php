@@ -1,5 +1,5 @@
 <?php
-
+require_once '../configuration/config.php';
 class Habitat
 {
     private $habitat_id;
