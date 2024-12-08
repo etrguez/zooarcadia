@@ -1,10 +1,11 @@
 <?php
 require_once '../configuration/config.php';
 
-$sql = 'SELECT habitats.nom, habitats.description, images.image_data, habitats.habitat_id
+$sql = 'SELECT habitats.nom, habitats.description, images.image_data
         FROM habitats 
         JOIN images ON images.habitat_id = habitats.habitat_id';	
 $stmt = $bdd->query($sql);
+
 ?>
 
 <!DOCTYPE html>
