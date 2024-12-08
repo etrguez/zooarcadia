@@ -1,4 +1,5 @@
 <?php
+ini_set('memory_limit', '256M');
 require_once '../configuration/config.php';
 
 $sql = 'SELECT habitats.nom, habitats.description, images.image_data, habitats.habitat_id
