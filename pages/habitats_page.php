@@ -1,15 +1,10 @@
 <?php
 require_once '../configuration/config.php';
-$dsn = 'mysql:host=localhost;port=3306;dbname=arcadia';
-$username = 'root';
-$password = '';
-
-
 
 $sql = 'SELECT habitats.nom, habitats.description, images.image_data, habitats.habitat_id
         FROM habitats 
         JOIN images ON images.habitat_id = habitats.habitat_id';	
-$stmt = $pdo->query($sql);
+$stmt = $bdd->query($sql);
 ?>
 
 <!DOCTYPE html>
@@ -187,5 +182,5 @@ $stmt = $pdo->query($sql);
 
 <?php
 
-$pdo = null;
+$bdd = null;
 ?>
