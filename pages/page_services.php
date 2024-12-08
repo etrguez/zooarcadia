@@ -1,15 +1,11 @@
 <?php
 
-$dsn = 'mysql:host=localhost;port=3306;dbname=arcadia';
-$username = 'root';
-$password = '';
-
 require_once '../configuration/config.php';
 
 $sql = 'SELECT services.nom, services.description, images.image_data
         FROM services 
         JOIN images ON images.service_id = services.service_id';	
-$stmt = $pdo->query($sql);
+$stmt = $bdd->query($sql);
 ?>
 
 <!DOCTYPE html>
