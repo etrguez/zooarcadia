@@ -11,12 +11,6 @@ if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1 && $_SESSION['role'] !=
 $role_utilisateur = $_SESSION['role'];
 $role_label = $role_utilisateur == 1 ? 'Administrateur' : ($role_utilisateur == 3 ? 'Vétérinaire' : 'Employé');
 
-try {
-    $base_de_donnees = new PDO('mysql:host=localhost;port=3306;dbname=arcadia', 'root', '');
-    $base_de_donnees->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die('Erreur de connexion : ' . $e->getMessage());
-}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['creer_habitat']) && $role_utilisateur == 1) {
@@ -25,19 +19,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $commentaire_habitat = htmlspecialchars($_POST['commentaire_habitat']);
 
         $sql = "INSERT INTO habitats (nom, description, commentaire_habitat) VALUES (:nom, :description, :commentaire_habitat)";
-        $statement = $base_de_donnees->prepare($sql);
+        $statement = $bdd->prepare($sql);
         $statement->execute([
             ':nom' => $nom,
             ':description' => $description,
             ':commentaire_habitat' => $commentaire_habitat
         ]);
 
-        $habitat_id = $base_de_donnees->lastInsertId();
+        $habitat_id = $bdd->lastInsertId();
 
         if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
             $image_data = file_get_contents($_FILES['image']['tmp_name']);
             $sql = "INSERT INTO images (habitat_id, image_data) VALUES (:habitat_id, :image_data)";
-            $statement = $base_de_donnees->prepare($sql);
+            $statement = $bdd->prepare($sql);
             $statement->execute([
                 ':habitat_id' => $habitat_id,
                 ':image_data' => $image_data
@@ -51,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
         $sql = "UPDATE habitats SET commentaire_habitat = :commentaire_habitat WHERE habitat_id = :habitat_id";
-        $statement = $base_de_donnees->prepare($sql);
+        $statement = $bdd->prepare($sql);
         $statement->execute([
             ':commentaire_habitat' => $commentaire_habitat,
             ':habitat_id' => $habitat_id
@@ -62,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $description = $_POST['description'];
 
             $sql = "UPDATE habitats SET nom = :nom, description = :description WHERE habitat_id = :habitat_id";
-            $statement = $base_de_donnees->prepare($sql);
+            $statement = $bdd->prepare($sql);
             $statement->execute([
                 ':nom' => $nom,
                 ':description' => $description,
@@ -72,20 +66,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
                 $image_data = file_get_contents($_FILES['image']['tmp_name']);
                 $sql = "SELECT * FROM images WHERE habitat_id = :habitat_id";
-                $statement = $base_de_donnees->prepare($sql);
+                $statement = $bdd->prepare($sql);
                 $statement->execute([':habitat_id' => $habitat_id]);
                 $image = $statement->fetch(PDO::FETCH_ASSOC);
 
                 if ($image) {
                     $sql = "UPDATE images SET image_data = :image_data WHERE habitat_id = :habitat_id";
-                    $statement = $base_de_donnees->prepare($sql);
+                    $statement = $bdd->prepare($sql);
                     $statement->execute([
                         ':image_data' => $image_data,
                         ':habitat_id' => $habitat_id
                     ]);
                 } else {
                     $sql = "INSERT INTO images (habitat_id, image_data) VALUES (:habitat_id, :image_data)";
-                    $statement = $base_de_donnees->prepare($sql);
+                    $statement = $bdd->prepare($sql);
                     $statement->execute([
                         ':habitat_id' => $habitat_id,
                         ':image_data' => $image_data
@@ -99,11 +93,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $habitat_id = htmlspecialchars($_POST['habitat_id']);
         
         $sql = "DELETE FROM images WHERE habitat_id = :habitat_id";
-        $statement = $base_de_donnees->prepare($sql);
+        $statement = $bdd->prepare($sql);
         $statement->execute([':habitat_id' => $habitat_id]);
 
         $sql = "DELETE FROM habitats WHERE habitat_id = :habitat_id";
-        $statement = $base_de_donnees->prepare($sql);
+        $statement = $bdd->prepare($sql);
         $statement->execute([':habitat_id' => $habitat_id]);
 
         echo "Habitat supprimé avec succès.";
@@ -111,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $sql = "SELECT habitats.*, images.image_data FROM habitats LEFT JOIN images ON habitats.habitat_id = images.habitat_id";
-$habitats = $base_de_donnees->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+$habitats = $bdd->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
