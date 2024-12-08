@@ -1,21 +1,13 @@
 <?php
 session_start();
+
 require_once '../configuration/config.php';
 if (!isset($_SESSION['role']) || $_SESSION['role'] != 1) {
     header('Location: connexion_utilisateur.php');
     exit();
 }
 
-
-
 $role_utilisateur = $_SESSION['role'];
-
-try {
-    $base_de_donnees = new PDO('mysql:host=localhost;port=3306;dbname=arcadia', 'root', '');
-    $base_de_donnees->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die('Erreur de connexion : ' . $e->getMessage());
-}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['creer_service'])) {
@@ -23,18 +15,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $description = $_POST['description'];
 
         $sql = "INSERT INTO services (nom, description) VALUES (:nom, :description)";
-        $statement = $base_de_donnees->prepare($sql);
+        $statement = $bdd->prepare($sql);
         $statement->execute([
             ':nom' => $nom,
             ':description' => $description
         ]);
 
-        $service_id = $base_de_donnees->lastInsertId();
+        $service_id = $bdd->lastInsertId();
 
         if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
             $image_data = file_get_contents($_FILES['image']['tmp_name']);
             $sql = "INSERT INTO images (service_id, image_data) VALUES (:service_id, :image_data)";
-            $statement = $base_de_donnees->prepare($sql);
+            $statement = $bdd->prepare($sql);
             $statement->execute([
                 ':service_id' => $service_id,
                 ':image_data' => $image_data
@@ -47,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $description = $_POST['description'];
 
         $sql = "UPDATE services SET description = :description WHERE service_id = :service_id";
-        $statement = $base_de_donnees->prepare($sql);
+        $statement = $bdd->prepare($sql);
         $statement->execute([
             ':description' => $description,
             ':service_id' => $service_id
@@ -56,20 +48,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
             $image_data = file_get_contents($_FILES['image']['tmp_name']);
             $sql = "SELECT * FROM images WHERE service_id = :service_id";
-            $statement = $base_de_donnees->prepare($sql);
+            $statement = $bdd->prepare($sql);
             $statement->execute([':service_id' => $service_id]);
             $image = $statement->fetch(PDO::FETCH_ASSOC);
 
             if ($image) {
                 $sql = "UPDATE images SET image_data = :image_data WHERE service_id = :service_id";
-                $statement = $base_de_donnees->prepare($sql);
+                $statement = $bdd->prepare($sql);
                 $statement->execute([
                     ':image_data' => $image_data,
                     ':service_id' => $service_id
                 ]);
             } else {
                 $sql = "INSERT INTO images (service_id, image_data) VALUES (:service_id, :image_data)";
-                $statement = $base_de_donnees->prepare($sql);
+                $statement = $bdd->prepare($sql);
                 $statement->execute([
                     ':service_id' => $service_id,
                     ':image_data' => $image_data
@@ -82,11 +74,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $service_id = $_POST['service_id'];
 
         $sql = "DELETE FROM images WHERE service_id = :service_id";
-        $statement = $base_de_donnees->prepare($sql);
+        $statement = $bdd->prepare($sql);
         $statement->execute([':service_id' => $service_id]);
 
         $sql = "DELETE FROM services WHERE service_id = :service_id";
-        $statement = $base_de_donnees->prepare($sql);
+        $statement = $bdd->prepare($sql);
         $statement->execute([':service_id' => $service_id]);
 
         echo "Service supprimé avec succès.";
@@ -94,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $sql = "SELECT services.*, images.image_data FROM services LEFT JOIN images ON services.service_id = images.service_id";
-$services = $base_de_donnees->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+$services = $bdd->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
