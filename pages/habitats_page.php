@@ -179,8 +179,3 @@ $stmt = $bdd->query($sql);
       <script src="script.js"></script>
 </body>
 </html>
-
-<?php
-
-$bdd = null;
-?>
