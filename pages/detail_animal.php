@@ -11,20 +11,20 @@ if (isset($_GET['animal_id'])) {
             LEFT JOIN races ON animaux.race_id = races.race_id 
             LEFT JOIN habitats ON animaux.habitat_id = habitats.habitat_id 
             WHERE animaux.animal_id = :animal_id";
-    $statement = $base_de_donnees->prepare($sql);
+    $statement = $bdd->prepare($sql);
     $statement->execute([':animal_id' => $animal_id]);
     $animal = $statement->fetch(PDO::FETCH_ASSOC);
 
     if ($animal) {
         $sql_images = "SELECT image_data FROM images WHERE animal_id = :animal_id";
-        $statement_images = $base_de_donnees->prepare($sql_images);
+        $statement_images = $bdd->prepare($sql_images);
         $statement_images->execute([':animal_id' => $animal_id]);
         $images = $statement_images->fetchAll(PDO::FETCH_ASSOC);
 
         $sql_rapports = "SELECT etat_animal, nourriture_proposee, grammage_nourriture, date_passage, detail_etat_animal 
                          FROM rapports_veterinaires 
                          WHERE animal_id = :animal_id";
-        $statement_rapports = $base_de_donnees->prepare($sql_rapports);
+        $statement_rapports = $bdd->prepare($sql_rapports);
         $statement_rapports->execute([':animal_id' => $animal_id]);
         $rapports = $statement_rapports->fetchAll(PDO::FETCH_ASSOC);
     }
