@@ -1,5 +1,7 @@
 <?php
 session_start();
+ini_set('upload_max_filesize', '50M');
+ini_set('post_max_size', '50M');
 require_once '../configuration/config.php';
 if (!isset($_SESSION['role']) || ($_SESSION['role'] != 1 && $_SESSION['role'] != 3)) {
     header('Location: connexion_utilisateur.php');
