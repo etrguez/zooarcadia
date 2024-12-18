@@ -83,7 +83,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['laisser_avis'])) {
         <button type="submit" name="laisser_avis" class="btn btn-success w-100">Soumettre</button>
     </form>
 </main>
-
+<main class="container my-5">
+    <h2 class="text-center text-success mb-4">L'avis de nos visiteurs</h2>
+    <div class="row">
+        <?php if (count($avis) > 0): ?>
+            <?php foreach ($avis as $un_avis): ?>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title text-success"><?php echo htmlspecialchars($un_avis['pseudo']); ?></h5>
+                            <p class="card-text"><?php echo htmlspecialchars($un_avis['commentaire']); ?></p>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p class="text-center">Aucun avis trouvé.</p>
+        <?php endif; ?>
+    </div>
+</main>
 <footer>
     <div class="text-center text-lg-start bg-body-tertiary text-muted">
         <section class="d-flex justify-content-center justify-content-lg-around p-4 border-bottom">
