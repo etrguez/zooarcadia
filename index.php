@@ -184,7 +184,7 @@ $avis = $bdd->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
      <main class="container my-5">
-    <h2 class="text-center text-success mb-4">L'avis de nos visiteurs</h2>
+    <h2 class="text-center text-success mb-4"><a class="text-success" href="./pages/page_laisser_avis.php">L'avis de nos visiteurs</a></h2>
     <div class="row">
         <?php if (count($avis) > 0): ?>
             <?php foreach ($avis as $un_avis): ?>
