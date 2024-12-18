@@ -18,7 +18,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['laisser_avis'])) {
         $message = "Veuillez remplir tous les champs.";
     }
 }
+
+
+$sql = "SELECT * FROM avis WHERE isVisible = TRUE";
+$avis = $bdd->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -102,6 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['laisser_avis'])) {
         <?php endif; ?>
     </div>
 </main>
+
 <footer>
     <div class="text-center text-lg-start bg-body-tertiary text-muted">
         <section class="d-flex justify-content-center justify-content-lg-around p-4 border-bottom">
