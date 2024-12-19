@@ -1,6 +1,7 @@
 <?php
-require '../vendor/autoload.php';
+session_start();
 require_once '../configuration/config.php';
+require '../vendor/autoload.php';
 
 use MongoDB\Client;
 
@@ -33,16 +34,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $race_id = $bdd->lastInsertId();
                 }
 
-                $stmt = $bdd->prepare('INSERT INTO animaux (prenom, race_id, description, etat, habitat_id, image_data, image_type) VALUES (:prenom, :race_id, :description, :etat, :habitat_id, :image_data, :image_type)');
+                $stmt = $bdd->prepare('INSERT INTO animaux (prenom, race_id, description, etat, habitat_id) VALUES (:prenom, :race_id, :description, :etat, :habitat_id)');
                 $stmt->execute([
                     ':prenom' => $prenom,
                     ':race_id' => $race_id,
                     ':description' => $description,
                     ':etat' => $etat,
-                    ':habitat_id' => $habitat_id,
-                    ':image_data' => $image_data,
-                    ':image_type' => $image_type
+                    ':habitat_id' => $habitat_id
                 ]);
+
+                $animal_id = $bdd->lastInsertId();
+
+                if ($image_data !== null) {
+                    $stmt = $bdd->prepare('INSERT INTO images (animal_id, image_data, image_type) VALUES (:animal_id, :image_data, :image_type)');
+                    $stmt->execute([
+                        ':animal_id' => $animal_id,
+                        ':image_data' => $image_data,
+                        ':image_type' => $image_type
+                    ]);
+                }
 
                 echo "Animal créé avec succès.";
             } else {
@@ -108,7 +118,31 @@ $habitats = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </form>
         <hr>
         <h3>Liste des animaux</h3>
-        <!-- Code pour afficher la liste des animaux -->
+        <?php
+        // Récupérer la liste des animaux avec leurs images
+        $stmt = $bdd->query('
+            SELECT animaux.animal_id, animaux.prenom, animaux.description, animaux.etat, habitats.nom AS habitat_nom, images.image_data, images.image_type
+            FROM animaux
+            INNER JOIN habitats ON animaux.habitat_id = habitats.habitat_id
+            LEFT JOIN images ON animaux.animal_id = images.animal_id
+        ');
+        $animaux = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($animaux as $animal) {
+            echo '<div class="card mb-3" style="width: 18rem;">';
+            if ($animal['image_data']) {
+                $imageData = base64_encode($animal['image_data']);
+                echo '<img src="data:' . $animal['image_type'] . ';base64,' . $imageData . '" class="card-img-top" alt="Image de ' . htmlspecialchars($animal['prenom']) . '">';
+            }
+            echo '<div class="card-body">';
+            echo '<h5 class="card-title">' . htmlspecialchars($animal['prenom']) . '</h5>';
+            echo '<p class="card-text">' . htmlspecialchars($animal['description']) . '</p>';
+            echo '<p class="card-text"><small class="text-muted">État: ' . htmlspecialchars($animal['etat']) . '</small></p>';
+            echo '<p class="card-text"><small class="text-muted">Habitat: ' . htmlspecialchars($animal['habitat_nom']) . '</small></p>';
+            echo '</div>';
+            echo '</div>';
+        }
+        ?>
     </div>
 </body>
 </html>
