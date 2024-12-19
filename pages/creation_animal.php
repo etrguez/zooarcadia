@@ -242,7 +242,7 @@ $habitats = $bdd->query('SELECT habitat_id, nom FROM habitats')->fetchAll(PDO::F
                 <option value="">-- Veuillez choisir un habitat --</option>
                 <?php foreach ($habitats as $habitat): ?>
                     
-                    <option value="<?php echo htmlspecialchars($habitat['habitat_id']); ?>"> <option value="<?php echo htmlspecialchars($habitat['nom']); ?>">
+                    <option value="<?php echo htmlspecialchars($habitat['habitat_id']); ?>"><?php echo htmlspecialchars($habitat['nom']); ?> <option>
                 <?php endforeach; ?>
             </select>
         </div>

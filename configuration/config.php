@@ -11,7 +11,7 @@ if (getenv('JAWSDB_URL') !== false) {
     $hostname = 'localhost';
     $username = 'root';
     $password = '';
-    $database = 'arcadia';
+    $database = 'arcadia_test';
     $port = 3306; 
 }
 
