@@ -1,5 +1,6 @@
 <?php
 require_once '../configuration/config.php';
+ini_set('memory_limit', '256M');
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
