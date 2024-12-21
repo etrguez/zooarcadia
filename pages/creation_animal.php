@@ -146,8 +146,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    header('Location: ' . $_SERVER['PHP_SELF']);
-    exit();
 }
 
 $query = '
@@ -241,7 +239,7 @@ $habitats = $bdd->query('SELECT habitat_id, nom FROM habitats')->fetchAll(PDO::F
             <select class="form-select" id="habitat_id" name="habitat_id" required>
                 <option value="">-- Veuillez choisir un habitat --</option>
                 <?php foreach ($habitats as $habitat): ?>
-                    
+        
                     <option value="<?php echo htmlspecialchars($habitat['habitat_id']); ?>"><?php echo htmlspecialchars($habitat['nom']); ?> <option>
                 <?php endforeach; ?>
             </select>
