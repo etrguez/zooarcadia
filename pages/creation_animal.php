@@ -105,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]);
 
                 if ($image_data) {
-                    $stmt = $bdd->prepare('INSERT INTO images (animal_id, image_data) VALUES (:animal_id, :image_data)');
+                    $stmt = $bdd->prepare('UPDATE images SET image_data = :image_data WHERE animal_id = :animal_id');
                     $stmt->execute([
                         ':image_data' => $image_data,
                         ':animal_id' => $animal_id
