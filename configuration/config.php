@@ -1,4 +1,7 @@
 <?php
+
+require_once __DIR__ . '/env.php';
+
 if (getenv('JAWSDB_URL') !== false) {
     $url = getenv('JAWSDB_URL');
     $dbparts = parse_url($url);
@@ -6,19 +9,18 @@ if (getenv('JAWSDB_URL') !== false) {
     $username = $dbparts['user'];
     $password = $dbparts['pass'];
     $database = ltrim($dbparts['path'], '/');
-    $port = isset($dbparts['port']) ? $dbparts['port'] : 3306; 
+    $port = isset($dbparts['port']) ? $dbparts['port'] : 3306;
 } else {
-    $hostname = 'localhost';
-    $username = 'root';
-    $password = '';
-    $database = 'arcadiatest';
-    $port = 3306; 
+    $hostname = getenv('DB_HOST') ?: 'localhost';
+    $username = getenv('DB_USER') ?: 'root';
+    $password = getenv('DB_PASSWORD') ?: '';
+    $database = getenv('DB_NAME') ?: 'arcadia_db_elisabeth';
+    $port = (int)(getenv('DB_PORT') ?: '3306');
 }
 
 try {
     $bdd = new PDO("mysql:host=$hostname;port=$port;dbname=$database;charset=utf8mb4", $username, $password);
     $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo "";
 } catch (PDOException $e) {
     die('Erreur de connexion : ' . $e->getMessage());
 }

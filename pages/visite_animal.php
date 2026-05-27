@@ -3,7 +3,11 @@ require '../vendor/autoload.php';
 require_once '../configuration/config.php';
 use MongoDB\Client;
 
-$client = new Client('mongodb+srv://elisabethtalavera:Toyotaf.5355@cluster0.4i1mc.mongodb.net/ARCADIA_ZOO?retryWrites=true');
+$mongoUri = getenv('MONGODB_URI');
+if (!$mongoUri) {
+    die('MONGODB_URI non configurée. Définissez-la dans Coolify ou dans le fichier .env');
+}
+$client = new Client($mongoUri);
 $database = $client->selectDatabase('ARCADIA_ZOO');
 $collection = $database->selectCollection('ANIMAUX');
 
