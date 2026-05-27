@@ -9,8 +9,6 @@ RUN apt-get update && apt-get install -y \
     git \
     unzip \
     libzip-dev \
-    libssl-dev \
-    pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
 RUN docker-php-ext-install -j$(nproc) \
@@ -18,9 +16,6 @@ RUN docker-php-ext-install -j$(nproc) \
     mysqli \
     opcache \
     zip
-
-RUN pecl install mongodb \
-    && docker-php-ext-enable mongodb
 
 RUN a2enmod rewrite headers expires deflate
 

@@ -5,7 +5,7 @@
 
 if [ ! -f "/var/www/html/vendor/autoload.php" ]; then
     echo "Vendor directory is missing or incomplete. Installing dependencies..."
-    composer install --no-interaction --optimize-autoloader
+    composer install --no-interaction --optimize-autoloader --ignore-platform-req=ext-mongodb
 else
     echo "Dependencies are already installed."
 fi
