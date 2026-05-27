@@ -2,14 +2,15 @@
 
 require_once __DIR__ . '/env.php';
 
-if (getenv('JAWSDB_URL') !== false) {
-    $url = getenv('JAWSDB_URL');
-    $dbparts = parse_url($url);
+$dbUrl = getenv('DATABASE_URL') ?: getenv('JAWSDB_URL');
+
+if ($dbUrl !== false) {
+    $dbparts = parse_url($dbUrl);
     $hostname = $dbparts['host'];
     $username = $dbparts['user'];
     $password = $dbparts['pass'];
     $database = ltrim($dbparts['path'], '/');
-    $port = isset($dbparts['port']) ? $dbparts['port'] : 3306;
+    $port = isset($dbparts['port']) ? (int) $dbparts['port'] : 3306;
 } else {
     $hostname = getenv('DB_HOST') ?: 'localhost';
     $username = getenv('DB_USER') ?: 'root';

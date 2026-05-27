@@ -1,17 +1,15 @@
 <?php
-require '../vendor/autoload.php'; 
 require_once '../configuration/config.php';
-use MongoDB\Client;
+require_once '../configuration/mongodb.php';
 
-$mongoUri = getenv('MONGODB_URI');
-if (!$mongoUri) {
-    die('MONGODB_URI non configurée. Définissez-la dans Coolify ou dans le fichier .env');
+$mongoEnabled = isMongoEnabled();
+$animals = [];
+
+if ($mongoEnabled) {
+    require '../vendor/autoload.php';
+    $collection = getMongoCollection('ANIMAUX');
+    $animals = $collection ? $collection->find()->toArray() : [];
 }
-$client = new Client($mongoUri);
-$database = $client->selectDatabase('ARCADIA_ZOO');
-$collection = $database->selectCollection('ANIMAUX');
-
-$animals = $collection->find()->toArray();
 ?>
 
 <!DOCTYPE html>
@@ -62,6 +60,13 @@ $animals = $collection->find()->toArray();
       </nav>
     <div class="container mt-5">
         <h1 class="titre d-flex justify-content-center">Compteur de visites des animaux</h1>
+        <?php if (!$mongoEnabled): ?>
+            <div class="alert alert-info text-center mt-4">
+                Le compteur de visites MongoDB n'est pas encore configuré.
+            </div>
+        <?php elseif (count($animals) === 0): ?>
+            <p class="text-center mt-4">Aucune donnée de visite disponible.</p>
+        <?php else: ?>
         <div class="row mt-3">
             <?php foreach ($animals as $animal): ?>
                 <div class="col-md-4">
@@ -75,6 +80,7 @@ $animals = $collection->find()->toArray();
                 </div>
             <?php endforeach; ?>
         </div>
+        <?php endif; ?>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

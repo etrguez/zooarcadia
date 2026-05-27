@@ -1,12 +1,7 @@
 <?php
 session_start();
 require_once '../configuration/config.php';
-require '../vendor/autoload.php';
-
-use MongoDB\Client;
-
-
-
+require_once '../configuration/mongodb.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
 
@@ -44,15 +39,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]);
 
                 $animal_id = (int)$bdd->lastInsertId();
-                $client = new Client('mongodb+srv://elisabethtalavera:Toyotaf.5355@cluster0.4i1mc.mongodb.net/ARCADIA_ZOO?retryWrites=true');
-                $database = $client->selectDatabase('ARCADIA_ZOO');
-                $collection = $database->selectCollection('ANIMAUX');
 
-                $collection->insertOne([
-                    'animal_id' => $animal_id,
-                    'prenom' => $prenom,
-                    'decompte' => 0 
-                ]);
+                $collection = getMongoCollection('ANIMAUX');
+                if ($collection !== null) {
+                    $collection->insertOne([
+                        'animal_id' => $animal_id,
+                        'prenom' => $prenom,
+                        'decompte' => 0
+                    ]);
+                }
 
                 if ($image_data) {
                     $stmt = $bdd->prepare('INSERT INTO images (animal_id, image_data) VALUES (:animal_id, :image_data)');
@@ -130,12 +125,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt = $bdd->prepare('DELETE FROM images WHERE animal_id = :animal_id');
                 $stmt->execute([':animal_id' => $animal_id]);
 
-                $client = new Client('mongodb+srv://elisabethtalavera:Toyotaf.5355@cluster0.4i1mc.mongodb.net/ARCADIA_ZOO?retryWrites=true');
-                $database = $client->selectDatabase('ARCADIA_ZOO');
-                $collection = $database->selectCollection('ANIMAUX');
-
-
-                $collection->deleteOne(['animal_id' => $animal_id]);
+                $collection = getMongoCollection('ANIMAUX');
+                if ($collection !== null) {
+                    $collection->deleteOne(['animal_id' => $animal_id]);
+                }
 
                 $_SESSION['message'] = "Animal supprimé";
             } else {

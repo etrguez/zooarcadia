@@ -1,23 +1,17 @@
 <?php
 
-require '../vendor/autoload.php'; 
-require_once '../configuration/config.php';
-
-use MongoDB\Client;
-
-$client = new Client('mongodb+srv://elisabethtalavera:Toyotaf.5355@cluster0.4i1mc.mongodb.net/ARCADIA_ZOO?retryWrites=true');
-$database = $client->selectDatabase('ARCADIA_ZOO');
+require_once '../configuration/mongodb.php';
 
 function incrementationCompteurVisite($animalId)
 {
-    global $database;
+    $collection = getMongoCollection('ANIMAUX');
 
-    $collection = $database->selectCollection('ANIMAUX');
+    if ($collection === null) {
+        return;
+    }
 
-    $result = $collection->updateOne(
+    $collection->updateOne(
         ['animal_id' => $animalId],
         ['$inc' => ['decompte' => 1]]
     );
-
 }
-?>
